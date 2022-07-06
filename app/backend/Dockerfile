@@ -1,3 +1,3 @@
-# FROM node:16-alpine
-# WORKDIR /app-backend
-#  ...
+FROM node:16-alpine
+WORKDIR /app-backend
+
