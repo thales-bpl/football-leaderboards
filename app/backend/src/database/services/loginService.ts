@@ -18,7 +18,7 @@ class LoginService {
     if (!validPass) throw new Error();
 
     const token = await generateToken(email, password);
-    
+
     return { token };
   };
 }
