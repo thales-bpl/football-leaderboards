@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import User from '../models/user';
 import generateToken from '../middlewares/jwtGenerator';
-import { ILogin, IUserId, IUserPass } from '../interfaces/interfaces';
+import { ILogin, IUserPass } from '../interfaces/interfaces';
 
 class LoginService {
   private model: typeof User;
@@ -18,7 +18,6 @@ class LoginService {
     if (!validPass) throw new Error();
 
     const token = await generateToken(email, password);
-
     return { token };
   };
 }

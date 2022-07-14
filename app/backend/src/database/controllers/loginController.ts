@@ -12,8 +12,6 @@ class LoginController {
     try {
       const { email, password } = req.body;
       const loggedUser = await this.service.login(email, password);
-      console.log(loggedUser);
-      
       return res.status(200).json(loggedUser);
     } catch (error) {
       console.log(error);
