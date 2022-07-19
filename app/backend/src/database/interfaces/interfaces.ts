@@ -6,7 +6,7 @@ export interface IUserPass extends IUserBase {
   password: string,
 }
 
-interface IUserBase {
+export interface IUserBase {
   username?: string,
   role?: string,
   email?: string,
@@ -15,4 +15,8 @@ interface IUserBase {
 export interface ILogin {
   // user: IUserId,
   token: string,
+}
+
+export interface IUserRole {
+  role: string;
 }

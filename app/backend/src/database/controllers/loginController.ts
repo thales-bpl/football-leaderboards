@@ -15,9 +15,23 @@ class LoginController {
       return res.status(200).json(loggedUser);
     } catch (error) {
       console.log(error);
-      return res.status(404).json();
+      return res.status(404).end();
     }
   };
+
+  public validateLogin = async (req: Request, res: Response) => {
+    try {
+      const { authorization } = req.headers;
+      const auth = authorization as string;
+      // if (typeof authorization === 'string') {
+      const userRole = await this.service.validateLogin(auth);
+      return res.status(200).json(userRole);
+      // }
+    } catch (error) {
+      console.log(error);
+      return res.status(404).end();
+    }
+  }
 }
 
 export default LoginController;
