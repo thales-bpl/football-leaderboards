@@ -9,28 +9,28 @@ class LoginController {
   }
 
   public login = async (req: Request, res: Response) => {
-    try {
+    // try {
       const { email, password } = req.body;
       const loggedUser = await this.service.login(email, password);
       return res.status(200).json(loggedUser);
-    } catch (error: any) {
-      // console.log(error);
-      console.log(error._status);
-      return res.status(error._status).json({ message: error.message });
-    }
+    // } catch (error: any) {
+    //   // console.log(error);
+    //   console.log(error._status);
+    //   return res.status(error._status).json({ message: error.message });
+    // }
   };
 
   public validateLogin = async (req: Request, res: Response) => {
-    try {
-      const { authorization } = req.headers;
-      const auth = authorization as string;
-      const userRole = await this.service.validateLogin(auth);
+    // try {
+      const { email } = req.body;
+      // const token = authorization as string;
+      const userRole = await this.service.validateLogin(email);
       return res.status(200).json(userRole);
-    } catch (error: any) {
+    // } catch (error: any) {
       // console.log(error);
-      console.log(error._status);
-      return res.status(error._status).json({ message: error.message });
-    }
+    //   console.log(error._status);
+    //   return res.status(error._status).json({ message: error.message });
+    // }
   }
 }
 

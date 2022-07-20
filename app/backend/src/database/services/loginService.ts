@@ -22,17 +22,16 @@ class LoginService {
     return { token };
   };
 
-  // TO-DO: otimizar esse return
-  public validateLogin = async (token: string): Promise<IUserRole> => {
-    const authorized = await verifyToken(token);
-    // console.log(authorized);
-    if (!authorized) throw new ErrorFactory(420, "some error has occured");
+  // TO-DO: otimizar esse return?
+  public validateLogin = async (email: string): Promise<IUserRole> => {
+    // const authorized = await verifyToken(token);
+    // console.log('validate login em loginService');
+    // if (!authorized) throw new ErrorFactory(401, "Unauthorized token");
 
-    const targetUser = await this.model.findOne({ where: { email: authorized.email } });
-    if (!targetUser) throw new ErrorFactory(420, "some error has occured");
+    const targetUser = await this.model.findOne({ where: { email } });
+    if (!targetUser) throw new ErrorFactory(404, "User not found");
+
     const { role } = targetUser;
-    // console.log(targetUser);
-
     return { role } as IUserRole;
   }
 }
