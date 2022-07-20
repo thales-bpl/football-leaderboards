@@ -20,3 +20,8 @@ export interface ILogin {
 export interface IUserRole {
   role: string;
 }
+
+export interface Error {
+  status: number,
+  message: string;
+}

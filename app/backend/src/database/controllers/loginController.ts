@@ -13,9 +13,9 @@ class LoginController {
       const { email, password } = req.body;
       const loggedUser = await this.service.login(email, password);
       return res.status(200).json(loggedUser);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      return res.status(404).end();
+      return res.status(error._status).json({ message: error.message });
     }
   };
 
@@ -23,13 +23,11 @@ class LoginController {
     try {
       const { authorization } = req.headers;
       const auth = authorization as string;
-      // if (typeof authorization === 'string') {
       const userRole = await this.service.validateLogin(auth);
       return res.status(200).json(userRole);
-      // }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      return res.status(404).end();
+      return res.status(error._status).json({ message: error.message });
     }
   }
 }
