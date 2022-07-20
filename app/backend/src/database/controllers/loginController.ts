@@ -14,7 +14,8 @@ class LoginController {
       const loggedUser = await this.service.login(email, password);
       return res.status(200).json(loggedUser);
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
+      console.log(error._status);
       return res.status(error._status).json({ message: error.message });
     }
   };
@@ -26,7 +27,8 @@ class LoginController {
       const userRole = await this.service.validateLogin(auth);
       return res.status(200).json(userRole);
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
+      console.log(error._status);
       return res.status(error._status).json({ message: error.message });
     }
   }

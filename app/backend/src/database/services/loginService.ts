@@ -2,7 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import User from '../models/user';
 import { generateToken, verifyToken } from '../utils/jwt';
 import { ILogin, IUserPass, IUserRole } from '../interfaces/interfaces';
-import ErrorFactory from '../utils/error';
+import ErrorFactory from '../utils/errorFactory';
 
 class LoginService {
   private model: typeof User;
