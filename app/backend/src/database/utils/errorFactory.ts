@@ -1,12 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
-
 class ErrorFactory extends Error {
-  public _status: number;
+  public status: number;
 
-  constructor (status: number, message: string) {
+  constructor(status: number, message: string) {
     super(message);
-    this._status = status;
-  };
+    this.status = status;
+  }
 }
 
 export default ErrorFactory;

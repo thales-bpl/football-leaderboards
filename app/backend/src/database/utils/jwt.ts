@@ -11,9 +11,9 @@ const generateToken = async (email: string, password: string): Promise<string> =
 const verifyToken = async (token: string): Promise<JwtPayload> => {
   const verified = verify(token, SECRET);
   return verified as JwtPayload;
-}
+};
 
 export {
   generateToken,
   verifyToken,
-}
+};

@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import ErrorFactory from '../utils/errorFactory';
 import { verifyToken } from '../utils/jwt';
 
-const missingToken = new ErrorFactory(401, "Token must be provided");
-const unauthorizedToken = new ErrorFactory(401, "Unauthorized token");
+const missingToken = new ErrorFactory(401, 'Token must be provided');
+const unauthorizedToken = new ErrorFactory(401, 'Unauthorized token');
 
 const tokenValidator = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
@@ -18,11 +18,9 @@ const tokenValidator = async (req: Request, res: Response, next: NextFunction) =
     } catch (error) {
       next(unauthorizedToken);
     }
-  };
+  }
 
   next();
 };
 
-export {
-  tokenValidator,
-}
+export default tokenValidator;

@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import LoginController from '../controllers/loginController';
-import { loginValidator } from '../middlewares/loginValidator';
-import { tokenValidator } from '../middlewares/tokenValidator';
+import loginValidator from '../middlewares/loginValidator';
+import tokenValidator from '../middlewares/tokenValidator';
 
-const rescue = require('express-rescue')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const rescue = require('express-rescue');
 
 const router = Router();
 const loginController = new LoginController();
