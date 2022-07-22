@@ -1,3 +1,4 @@
+/// /// /// USER INTERFACES \\\ \\\ \\\
 export interface IUserId extends IUserBase {
   id: number,
 }
@@ -21,6 +22,13 @@ export interface IUserRole {
   role: string;
 }
 
+/// /// /// TEAM INTERFACES \\\ \\\ \\\
+export interface ITeam {
+  id?: number,
+  teamName: string
+}
+
+/// /// /// UTILS INTERFACES \\\ \\\ \\\
 export interface Error {
   status: number,
   message: string;
