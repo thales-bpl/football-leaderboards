@@ -28,8 +28,39 @@ export interface ITeam {
   teamName: string
 }
 
+/// /// /// MATCH INTERFACES \\\ \\\ \\\
+export interface IMatch {
+  id?: number,
+  homeTeam: number,
+  homeTeamGoals: number,
+  awayTeam: number,
+  awayTeamGoals: number,
+  inProgress: boolean,
+}
+
+export interface IMatchResponse {
+  id: number,
+  homeTeam: number,
+  homeTeamGoals: number,
+  awayTeam: number,
+  awayTeamGoals: number,
+  inProgress: boolean,
+  teamHome: {
+    teamName: string,
+  },
+  teamAway: {
+    teamName: string,
+  },
+}
+
 /// /// /// UTILS INTERFACES \\\ \\\ \\\
 export interface Error {
   status: number,
-  message: string;
+  message: string,
 }
+
+// export interface ILooseObject {
+//   [key: string]: number || string
+// }
+
+// const matchtype = number || string;

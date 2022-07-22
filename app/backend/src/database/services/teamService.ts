@@ -16,7 +16,7 @@ class TeamService {
 
   public getById = async (id: number): Promise<ITeam> => {
     const team = await this.model.findOne({ where: { id } });
-    if (!team) throw new ErrorFactory(404, 'team not found');
+    if (!team) throw new ErrorFactory(404, 'Team not found');
     return team as ITeam;
   };
 }
