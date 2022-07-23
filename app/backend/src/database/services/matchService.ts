@@ -18,8 +18,16 @@ class MatchService {
   public post = async (matchData: IMatchReq, inProgress: boolean): Promise<IMatch> => {
     const matchDataProgress = { ...matchData, inProgress };
     const newMatch = await this.model.create(matchDataProgress);
-    if (!newMatch) throw new ErrorFactory(400, 'Bad Match Request');
+    if (!newMatch) throw new ErrorFactory(400, 'Bad match request');
     return newMatch;
+  };
+
+  public patch = async (id: number): Promise<object> => {
+    const match = await this.model.findOne({ where: { id } });
+    if (!match) throw new ErrorFactory(404, 'Match not found');
+    match.inProgress = false;
+    await match.save();
+    return { message: 'Finished' };
   };
 }
 

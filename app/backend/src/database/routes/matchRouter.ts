@@ -9,6 +9,7 @@ const matchController = new MatchController();
 
 router
   .get('/', rescue(matchController.getAll))
-  .post('/', rescue(matchController.post));
+  .post('/', rescue(matchController.post))
+  .patch('/:id', rescue(matchController.patch));
 
 export default router;
