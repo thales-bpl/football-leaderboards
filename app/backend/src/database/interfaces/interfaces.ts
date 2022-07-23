@@ -1,16 +1,16 @@
 /// /// /// USER INTERFACES \\\ \\\ \\\
+export interface IUserBase {
+  username?: string,
+  role?: string,
+  email?: string,
+}
+
 export interface IUserId extends IUserBase {
   id: number,
 }
 
 export interface IUserPass extends IUserBase {
   password: string,
-}
-
-export interface IUserBase {
-  username?: string,
-  role?: string,
-  email?: string,
 }
 
 export interface ILogin {
@@ -29,22 +29,19 @@ export interface ITeam {
 }
 
 /// /// /// MATCH INTERFACES \\\ \\\ \\\
-export interface IMatch {
-  id?: number,
+export interface IMatchReq {
   homeTeam: number,
   homeTeamGoals: number,
   awayTeam: number,
   awayTeamGoals: number,
+}
+
+export interface IMatch extends IMatchReq {
+  id?: number,
   inProgress: boolean,
 }
 
-export interface IMatchResponse {
-  id: number,
-  homeTeam: number,
-  homeTeamGoals: number,
-  awayTeam: number,
-  awayTeamGoals: number,
-  inProgress: boolean,
+export interface IMatchResponse extends IMatch {
   teamHome: {
     teamName: string,
   },
@@ -58,9 +55,3 @@ export interface Error {
   status: number,
   message: string,
 }
-
-// export interface ILooseObject {
-//   [key: string]: number || string
-// }
-
-// const matchtype = number || string;
