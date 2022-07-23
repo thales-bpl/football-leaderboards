@@ -49,6 +49,11 @@ export interface IMatchResponse extends IMatch {
   },
 }
 
+export interface IOngoingMatch {
+  homeTeamGoals: number,
+  awayTeamGoals: number
+}
+
 /// /// /// UTILS INTERFACES \\\ \\\ \\\
 export interface Error {
   status: number,

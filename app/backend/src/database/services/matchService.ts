@@ -1,6 +1,6 @@
 import Match from '../models/match';
 import MatchEager from '../eager/matchEager';
-import { IMatch, IMatchReq } from '../interfaces/interfaces';
+import { IMatch, IMatchReq, IOngoingMatch } from '../interfaces/interfaces';
 import ErrorFactory from '../utils/errorFactory';
 
 class MatchService {
@@ -15,6 +15,7 @@ class MatchService {
       const allMatches = await this.model.findAll();
       return allMatches;
     }
+
     const allMatches = new MatchEager().getAllMatchesPayload();
     return allMatches;
   };
@@ -36,14 +37,29 @@ class MatchService {
     const matchDataProgress = { ...matchData, inProgress };
     const newMatch = await this.model.create(matchDataProgress);
     if (!newMatch) throw new ErrorFactory(400, 'Bad match request');
-
     return newMatch;
   };
 
-  public patch = async (id: number, option: boolean): Promise<object> => {
+  public patch = async (id: number, body: IOngoingMatch, option: boolean): Promise<object> => {
+    const { homeTeamGoals, awayTeamGoals } = body;
+    const match = await this.getById(id);
+
+    match.set({
+      homeTeamGoals,
+      awayTeamGoals,
+    });
+
+    match.inProgress = option;
+    await match.save();
+
+    return match;
+  };
+
+  public finishMatch = async (id: number, option: boolean): Promise<object> => {
     const match = await this.getById(id);
     match.inProgress = option;
     await match.save();
+
     return { message: 'Finished' };
   };
 }
