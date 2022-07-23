@@ -10,9 +10,19 @@ class MatchService {
     this.model = Match;
   }
 
-  public getAll = async () => {
+  public getAll = async (option?: boolean) => {
+    if (option) {
+      const allMatches = await this.model.findAll();
+      return allMatches;
+    }
     const allMatches = new MatchEager().getAllMatchesPayload();
     return allMatches;
+  };
+
+  public getById = async (id: number) => {
+    const match = await this.model.findOne({ where: { id } });
+    if (!match) throw new ErrorFactory(404, 'Match not found');
+    return match;
   };
 
   public post = async (matchData: IMatchReq, inProgress: boolean): Promise<IMatch> => {
@@ -23,8 +33,9 @@ class MatchService {
   };
 
   public patch = async (id: number): Promise<object> => {
-    const match = await this.model.findOne({ where: { id } });
-    if (!match) throw new ErrorFactory(404, 'Match not found');
+    const match = await this.getById(id);
+    // const match = await this.model.findOne({ where: { id } });
+    // if (!match) throw new ErrorFactory(404, 'Match not found');
     match.inProgress = false;
     await match.save();
     return { message: 'Finished' };

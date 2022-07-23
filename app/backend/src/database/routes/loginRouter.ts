@@ -10,7 +10,8 @@ const router = Router();
 const loginController = new LoginController();
 
 router
-  .post('/', loginValidator, rescue(loginController.login))
-  .get('/validate', tokenValidator, rescue(loginController.validateLogin));
+  .get('/', rescue(loginController.getAll))
+  .get('/validate', tokenValidator, rescue(loginController.validateLogin))
+  .post('/', loginValidator, rescue(loginController.login));
 
 export default router;

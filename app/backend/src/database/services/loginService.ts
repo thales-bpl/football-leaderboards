@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import User from '../models/user';
 import { generateToken } from '../utils/jwt';
-import { ILogin, IUserPass, IUserRole } from '../interfaces/interfaces';
+import { ILogin, IUserId, IUserPass, IUserRole } from '../interfaces/interfaces';
 import ErrorFactory from '../utils/errorFactory';
 
 class LoginService {
@@ -10,6 +10,11 @@ class LoginService {
   constructor() {
     this.model = User;
   }
+
+  public getAll = async (): Promise<IUserId[]> => {
+    const allUsers = await this.model.findAll();
+    return allUsers as IUserId[];
+  };
 
   public login = async (email: string, password: string): Promise<ILogin> => {
     const targetUser = await this.model.findOne({ where: { email } }) as IUserPass;

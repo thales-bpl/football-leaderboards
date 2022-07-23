@@ -13,6 +13,13 @@ class MatchController {
     return res.status(200).json(allMatches);
   };
 
+  public getById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const matchId = id as unknown as number;
+    const match = await this.service.getById(matchId);
+    return res.status(200).json(match);
+  };
+
   public post = async (req: Request, res: Response) => {
     const { body } = req;
     const newMatch = await this.service.post(body, true);
