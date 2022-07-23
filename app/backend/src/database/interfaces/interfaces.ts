@@ -14,7 +14,6 @@ export interface IUserPass extends IUserBase {
 }
 
 export interface ILogin {
-  // user: IUserId,
   token: string,
 }
 

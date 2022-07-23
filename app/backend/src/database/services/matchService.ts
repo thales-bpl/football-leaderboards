@@ -26,17 +26,23 @@ class MatchService {
   };
 
   public post = async (matchData: IMatchReq, inProgress: boolean): Promise<IMatch> => {
+    const homeTeam = this.getById(matchData.homeTeam);
+    const awayTeam = this.getById(matchData.awayTeam);
+
+    const EQUAL_TEAMS = 'It is not possible to create a match with two equal teams';
+    if (awayTeam === homeTeam) throw new ErrorFactory(401, EQUAL_TEAMS);
+    if (!homeTeam || !awayTeam) throw new ErrorFactory(404, 'There is no team with such id!');
+
     const matchDataProgress = { ...matchData, inProgress };
     const newMatch = await this.model.create(matchDataProgress);
     if (!newMatch) throw new ErrorFactory(400, 'Bad match request');
+
     return newMatch;
   };
 
-  public patch = async (id: number): Promise<object> => {
+  public patch = async (id: number, option: boolean): Promise<object> => {
     const match = await this.getById(id);
-    // const match = await this.model.findOne({ where: { id } });
-    // if (!match) throw new ErrorFactory(404, 'Match not found');
-    match.inProgress = false;
+    match.inProgress = option;
     await match.save();
     return { message: 'Finished' };
   };
