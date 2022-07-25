@@ -3,7 +3,7 @@ import ErrorFactory from '../utils/errorFactory';
 import { verifyToken } from '../utils/jwt';
 
 const missingToken = new ErrorFactory(401, 'Token must be provided');
-const unauthorizedToken = new ErrorFactory(401, 'Unauthorized token');
+const unauthorizedToken = new ErrorFactory(401, 'Token must be a valid token');
 
 const tokenValidator = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;

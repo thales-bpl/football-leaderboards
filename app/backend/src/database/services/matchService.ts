@@ -1,5 +1,6 @@
 import Match from '../models/match';
 import MatchEager from '../eager/matchEager';
+import TeamService from './teamService';
 import { IMatch, IMatchReq, IOngoingMatch } from '../interfaces/interfaces';
 import ErrorFactory from '../utils/errorFactory';
 
@@ -20,19 +21,19 @@ class MatchService {
     return allMatches;
   };
 
-  public getById = async (id: number) => {
+  public getById = async (id: number): Promise<Match> => {
     const match = await this.model.findOne({ where: { id } });
     if (!match) throw new ErrorFactory(404, 'Match not found');
     return match;
   };
 
   public post = async (matchData: IMatchReq, inProgress: boolean): Promise<IMatch> => {
-    const homeTeam = this.getById(matchData.homeTeam);
-    const awayTeam = this.getById(matchData.awayTeam);
+    const { homeTeam, awayTeam } = matchData;
+    const { id: homeTeamId } = await new TeamService().getById(homeTeam);
+    const { id: awayTeamId } = await new TeamService().getById(awayTeam);
 
-    const EQUAL_TEAMS = 'It is not possible to create a match with two equal teams';
-    if (awayTeam === homeTeam) throw new ErrorFactory(401, EQUAL_TEAMS);
-    if (!homeTeam || !awayTeam) throw new ErrorFactory(404, 'There is no team with such id!');
+    const SAME_TEAMS = 'It is not possible to create a match with two equal teams';
+    if (homeTeamId === awayTeamId) throw new ErrorFactory(401, SAME_TEAMS);
 
     const matchDataProgress = { ...matchData, inProgress };
     const newMatch = await this.model.create(matchDataProgress);
@@ -40,18 +41,17 @@ class MatchService {
     return newMatch;
   };
 
-  public patch = async (id: number, body: IOngoingMatch, option: boolean): Promise<object> => {
+  public patch = async (id: number, body: IOngoingMatch, option?: boolean): Promise<IMatch> => {
     const { homeTeamGoals, awayTeamGoals } = body;
     const match = await this.getById(id);
+    if (option) match.inProgress = option;
 
     match.set({
       homeTeamGoals,
       awayTeamGoals,
     });
 
-    match.inProgress = option;
     await match.save();
-
     return match;
   };
 

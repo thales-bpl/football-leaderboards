@@ -8,6 +8,7 @@ class MatchEager {
     this.model = Match;
   }
 
+  // Não consigo usar type IMatchResponse[] nessa função. Por conta disso, não consigo tipar o getAll do matchService como IMatchResponse[] também.
   public getAllMatchesPayload = async () => {
     const matches = await this.model.findAll({
       include: [

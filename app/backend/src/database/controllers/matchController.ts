@@ -30,7 +30,7 @@ class MatchController {
     const { body } = req;
     const { id } = req.params;
     const matchId = id as unknown as number;
-    const updatedMatch = await this.service.patch(matchId, body, false);
+    const updatedMatch = await this.service.patch(matchId, body);
     return res.status(200).json(updatedMatch);
   };
 
