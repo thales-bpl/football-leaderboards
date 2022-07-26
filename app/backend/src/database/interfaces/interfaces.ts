@@ -54,6 +54,21 @@ export interface IOngoingMatch {
   awayTeamGoals: number
 }
 
+/// /// /// LEADERBOARD INTERFACES \\\ \\\ \\\
+export interface ILeaderboard {
+  teamId?: number,
+  name: string,
+  totalPoints: number,
+  totalGames: number,
+  totalVictories: number,
+  totalDraws: number,
+  totalLosses: number,
+  goalsFavor: number,
+  goalsOwn: number,
+  goalsBalance: number,
+  efficiency: number
+}
+
 /// /// /// UTILS INTERFACES \\\ \\\ \\\
 export interface Error {
   status: number,
