@@ -38,6 +38,8 @@ class MatchService {
     const matchDataProgress = { ...matchData, inProgress };
     const newMatch = await this.model.create(matchDataProgress);
     if (!newMatch) throw new ErrorFactory(400, 'Bad match request');
+
+    // if (!inProgress) await new LeaderboardService().post(newMatch);
     return newMatch;
   };
 
