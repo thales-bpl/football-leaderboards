@@ -7,6 +7,8 @@ const rescue = require('express-rescue');
 const router = Router();
 const leaderboardController = new LeaderboardController();
 
-router.get('/:id', rescue(leaderboardController.getTeamCampaign));
+router
+  .get('/home', rescue(leaderboardController.getLeaderboard))
+  .get('/:id', rescue(leaderboardController.getTeamCampaign));
 
 export default router;

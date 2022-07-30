@@ -1,11 +1,17 @@
 // import Match from '../models/match';
 // import TeamService from './teamService';
+// import MatchService from './matchService';
 import MatchEager from '../eager/matchEager';
 
 class LeaderboardService {
   public getTeamCampaign = async (id: number) => {
     const allMatches = new MatchEager().getTeamCampaign(id);
     return allMatches;
+  };
+
+  public getLeaderboard = async () => {
+    const leaderboard = new MatchEager().getLeaderboard();
+    return leaderboard;
   };
 }
 

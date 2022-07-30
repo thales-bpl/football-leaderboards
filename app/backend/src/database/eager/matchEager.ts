@@ -1,14 +1,11 @@
-import { IMatch /* ITeamStat  */ } from '../interfaces/interfaces';
+import { ILeaderboard } from '../interfaces/interfaces';
 import Match from '../models/match';
 import Team from '../models/team';
+import TeamService from '../services/teamService';
+import { teamCampaignStats } from '../utils/leaderboardUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Op } = require('sequelize');
-
-const statsMapper = (match: IMatch, teamId: number) => ({
-  teamId,
-  match,
-});
 
 class MatchEager {
   private model: typeof Match;
@@ -28,7 +25,9 @@ class MatchEager {
     return matches;
   };
 
-  public getTeamCampaign = async (id: number): Promise<IMatch[]> => {
+  // LEADERBOARD:
+
+  public getTeamCampaign = async (id: number) => {
     const teamCampaign = await this.model.findAll({
       where: {
         [Op.or]: [
@@ -38,22 +37,39 @@ class MatchEager {
       },
     });
 
-    return teamCampaign as IMatch[];
+    return teamCampaign;
   };
 
-  public teamStats = async (teamCampaign: IMatch[], teamId: number) => {
-    const teamGames = teamCampaign.length;
-    // const teamStat = {
-    //   teamPoints: 0,
-    //   teamWins: 0,
-    //   teamDraws: 0,
-    //   teamLosses: 0,
-    // }
+  public getCampaigns = async (id: number): Promise<ILeaderboard> => {
+    const name = await (await new TeamService().getById(id)).teamName;
+    const teamCampaign = await this.model.findAll({
+      where: {
+        [Op.or]: [
+          { homeTeam: id },
+          { awayTeam: id },
+        ],
+      },
+    });
 
-    teamCampaign.reduce((acc, curr) => statsMapper(curr, teamId), {});
-    // TO-DO: concluir esse return
+    const teamResults = teamCampaignStats(teamCampaign, id);
 
-    return teamGames;
+    return { name, ...teamResults } as unknown as ILeaderboard;
+  };
+
+  public getLeaderboard = async (): Promise<ILeaderboard[]> => {
+    const leaderboard:object[] = [];
+    const allTeams = await new TeamService().getAll();
+
+    console.log('getLeaderboard do matchEager');
+
+    allTeams.forEach((team) => {
+      console.log(leaderboard);
+      leaderboard.push(this.getCampaigns(team.id as number));
+    });
+
+    // aqui: bubble sort esse array leaderboard pra devolver por classificação
+
+    return leaderboard as ILeaderboard[];
   };
 }
 

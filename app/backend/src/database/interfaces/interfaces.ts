@@ -56,7 +56,6 @@ export interface IOngoingMatch {
 
 /// /// /// LEADERBOARD INTERFACES \\\ \\\ \\\
 export interface ILeaderboard {
-  teamId: number,
   name: string,
   totalPoints: number,
   totalGames: number,
@@ -70,10 +69,12 @@ export interface ILeaderboard {
 }
 
 export interface ITeamStat {
+  totalGames: number,
   teamPoints: number,
   teamWins: number,
   teamDraws: number,
   teamLosses: number,
+  efficiency: number
 }
 
 /// /// /// UTILS INTERFACES \\\ \\\ \\\
