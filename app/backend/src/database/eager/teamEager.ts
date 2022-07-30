@@ -1,8 +1,6 @@
 import Team from '../models/team';
-// import Match from '../models/match';
-import MatchService from '../services/matchService';
-
-const { Op } = require('sequelize');
+import Match from '../models/match';
+import { ITeamCampaign } from '../interfaces/interfaces';
 
 class TeamEager {
   private model: typeof Team;
@@ -11,16 +9,27 @@ class TeamEager {
     this.model = Team;
   }
 
-  // public getTeamCampaign = async (id: number) => {
-  //   const teamCampaign = new MatchService().findAll({
-  //     where: {
-  //       [Op.or]: [
-  //         { home_team: id },
-  //         { away_team: id }
-  //       ]
-  //     }
-  //   });
-  // };
+  public getAllTeamsCampaign = async (): Promise<ITeamCampaign[]> => {
+    const allTeamsCampaign = await this.model.findAll({
+      include: [
+        {
+          model: Match,
+          as: 'teamHome',
+          attributes: ['homeTeamGoals', 'awayTeamGoals'],
+          where: { inProgress: false },
+        },
+        {
+          model: Match,
+          as: 'teamAway',
+          attributes: ['awayTeamGoals', 'homeTeamGoals'],
+          where: { inProgress: false },
+        },
+      ],
+      attributes: { exclude: ['id'] },
+    });
+
+    return allTeamsCampaign as unknown as ITeamCampaign[];
+  };
 }
 
 export default TeamEager;

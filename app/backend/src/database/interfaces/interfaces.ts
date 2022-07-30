@@ -77,6 +77,12 @@ export interface ITeamStat {
   efficiency: number
 }
 
+export interface ITeamCampaign {
+  teamName: string,
+  teamHome: IOngoingMatch[],
+  teamAway: IOngoingMatch[],
+}
+
 /// /// /// UTILS INTERFACES \\\ \\\ \\\
 export interface Error {
   status: number,

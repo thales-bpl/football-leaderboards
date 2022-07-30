@@ -1,114 +1,123 @@
-import { IMatch } from '../interfaces/interfaces';
+import { ITeamCampaign, IOngoingMatch, ILeaderboard } from '../interfaces/interfaces';
 
-export const calcPoints = (wins: number, draws: number) => (wins * 3) + draws;
-
-export const calcPoints2 = (gamesAsHomeTeam: IMatch[], gamesAsAwayTeam: IMatch[]): number => {
-  const pointsAsHome = gamesAsHomeTeam.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (homeTeamGoals > awayTeamGoals) return prev + 3;
-    if (homeTeamGoals === awayTeamGoals) return prev + 1;
-    if (homeTeamGoals < awayTeamGoals) return prev;
+export const calcPoints = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]): number => {
+  const pointsAsHome = teamHome.reduce((prev, curr) => {
+    if (curr.homeTeamGoals > curr.awayTeamGoals) return prev + 3;
+    if (curr.homeTeamGoals === curr.awayTeamGoals) return prev + 1;
     return prev;
   }, 0);
 
-  const pointsAsAway = gamesAsAwayTeam.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (awayTeamGoals > homeTeamGoals) return prev + 3;
-    if (awayTeamGoals === homeTeamGoals) return prev + 1;
-    if (awayTeamGoals < homeTeamGoals) return prev;
+  const pointsAsAway = teamAway.reduce((prev, curr) => {
+    if (curr.homeTeamGoals < curr.awayTeamGoals) return prev + 3;
+    if (curr.homeTeamGoals === curr.awayTeamGoals) return prev + 1;
     return prev;
   }, 0);
 
   return pointsAsHome + pointsAsAway;
 };
 
-export const calcWins = (gamesAsHomeTeam: IMatch[], gamesAsAwayTeam: IMatch[]): number => {
-  const winsAsHome = gamesAsHomeTeam.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (homeTeamGoals > awayTeamGoals) return prev + 1;
+export const calcWins = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]): number => {
+  const winsAsHome = teamHome.reduce((prev, curr) => {
+    if (curr.homeTeamGoals > curr.awayTeamGoals) return prev + 1;
     return prev;
   }, 0);
 
-  const winsAsAway = gamesAsAwayTeam.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (awayTeamGoals > homeTeamGoals) return prev + 1;
+  const winsAsAway = teamAway.reduce((prev, curr) => {
+    if (curr.homeTeamGoals < curr.awayTeamGoals) return prev + 1;
     return prev;
   }, 0);
 
   return winsAsHome + winsAsAway;
 };
 
-export const calcDraws = (teamCampaign: IMatch[]) => {
-  const draws = teamCampaign.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (homeTeamGoals === awayTeamGoals) return prev + 1;
-    return prev;
-  }, 0);
+export const calcDraws = (team: ITeamCampaign) => {
+  let draws = 0;
+
+  team.teamHome.forEach((match) => {
+    if (match.homeTeamGoals === match.awayTeamGoals) draws += 1;
+  });
+
+  team.teamAway.forEach((match) => {
+    if (match.homeTeamGoals === match.awayTeamGoals) draws += 1;
+  });
 
   return draws;
 };
 
-export const calcLosses = (gamesAsHomeTeam: IMatch[], gamesAsAwayTeam: IMatch[]) => {
-  const lossesAsHome = gamesAsHomeTeam.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (homeTeamGoals < awayTeamGoals) return prev + 1;
+export const calcLosses = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+  const lossesAsHome = teamHome.reduce((prev, curr) => {
+    if (curr.homeTeamGoals < curr.awayTeamGoals) return prev + 1;
     return prev;
   }, 0);
 
-  const lossesAsAway = gamesAsAwayTeam.reduce((prev, curr) => {
-    const { homeTeamGoals, awayTeamGoals } = curr;
-    if (awayTeamGoals < homeTeamGoals) return prev + 1;
+  const lossesAsAway = teamAway.reduce((prev, curr) => {
+    if (curr.homeTeamGoals > curr.awayTeamGoals) return prev + 1;
     return prev;
   }, 0);
 
   return lossesAsHome + lossesAsAway;
 };
 
-export const calcEfficiency = (matches: number, points: number) => (points / (matches * 3)) * 100;
-
-export const calcEfficiency2 = (matches: number, gamesAsHome: IMatch[], gamesAsAway: IMatch[]) => {
-  const teamPoints = calcPoints2(gamesAsHome, gamesAsAway);
-  return (teamPoints / (matches * 3)) * 100;
-};
-
-export const calcGoalsFavor = (gamesAsHomeTeam: IMatch[], gamesAsAwayTeam: IMatch[]) => {
-  const goalsAsHome = gamesAsHomeTeam.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
-  const goalsAsAway = gamesAsAwayTeam.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
+export const calcGoalsFavor = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+  const goalsAsHome = teamHome.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
+  const goalsAsAway = teamAway.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
 
   return goalsAsHome + goalsAsAway;
 };
 
-export const calcGoalsOwn = (gamesAsHomeTeam: IMatch[], gamesAsAwayTeam: IMatch[]) => {
-  const goalsOwnAsHome = gamesAsHomeTeam.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
-  const goalsOwnAsAway = gamesAsAwayTeam.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
+export const calcGoalsOwn = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+  const goalsOwnAsHome = teamHome.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
+  const goalsOwnAsAway = teamAway.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
 
   return goalsOwnAsHome + goalsOwnAsAway;
 };
 
-export const calcGoalsBalance = (goalsFavor: number, goalsOwn: number) => goalsFavor - goalsOwn;
-
-export const calcGoalsBalance2 = (gamesAsHomeTeam: IMatch[], gamesAsAwayTeam: IMatch[]) => {
-  const goalsFavor = calcGoalsFavor(gamesAsHomeTeam, gamesAsAwayTeam);
-  const goalsOwn = calcGoalsOwn(gamesAsHomeTeam, gamesAsAwayTeam);
+export const calcGoalsBalance = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+  const goalsFavor = calcGoalsFavor(teamHome, teamAway);
+  const goalsOwn = calcGoalsOwn(teamHome, teamAway);
 
   return goalsFavor - goalsOwn;
 };
 
-export const teamCampaignStats = (teamCampaign: IMatch[], teamId: number) => {
-  const totalGames = teamCampaign.length;
+export const calcEfficiency = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+  const teamPoints = calcPoints(teamHome, teamAway);
+  const matches = teamHome.length + teamAway.length;
 
-  const gamesAsHomeTeam = teamCampaign.filter((match) => teamId === match.homeTeam);
-  const gamesAsAwayTeam = teamCampaign.filter((match) => teamId === match.awayTeam);
+  const efficiency = (teamPoints / (matches * 3)) * 100;
+  return +efficiency.toFixed(2);
+};
 
-  return {
-    teamPoints: calcPoints2(gamesAsHomeTeam, gamesAsAwayTeam),
-    totalGames: teamCampaign.length,
-    teamWins: calcWins(gamesAsHomeTeam, gamesAsAwayTeam),
-    teamDraws: calcDraws(teamCampaign),
-    teamLosses: calcLosses(gamesAsHomeTeam, gamesAsAwayTeam),
-    goalsFavor: calcGoalsFavor(gamesAsHomeTeam, gamesAsAwayTeam),
-    goalsOwn: calcGoalsOwn(gamesAsHomeTeam, gamesAsAwayTeam),
-    goalsBalance: calcGoalsBalance2(gamesAsHomeTeam, gamesAsAwayTeam),
-    efficiency: calcEfficiency2(totalGames, gamesAsHomeTeam, gamesAsAwayTeam),
-  };
+export const getLeaderboard = (allTeamsCampaign: ITeamCampaign[]): ILeaderboard[] => {
+  const unorderedLeaderboard = allTeamsCampaign.map((team) => ({
+    name: team.teamName,
+    totalPoints: calcPoints(team.teamHome, team.teamAway),
+    totalGames: team.teamHome.length + team.teamAway.length,
+    teamWins: calcWins(team.teamHome, team.teamAway),
+    teamDraws: calcDraws(team),
+    teamLosses: calcLosses(team.teamHome, team.teamAway),
+    goalsFavor: calcGoalsFavor(team.teamHome, team.teamAway),
+    goalsOwn: calcGoalsOwn(team.teamHome, team.teamAway),
+    goalsBalance: calcGoalsBalance(team.teamHome, team.teamAway),
+    efficiency: calcEfficiency(team.teamHome, team.teamAway),
+  }));
+
+  return unorderedLeaderboard as unknown as ILeaderboard[];
+};
+
+export const sortLeaderboard = (leaderboard: ILeaderboard[]) => {
+  leaderboard.sort((teamA, teamB) => {
+    if (teamA.totalPoints > teamB.totalPoints) return -1;
+    if (teamA.totalPoints < teamB.totalPoints) return 1;
+    if (teamA.totalVictories > teamB.totalVictories) return -1;
+    if (teamA.totalVictories < teamB.totalVictories) return 1;
+    if (teamA.goalsBalance > teamB.goalsBalance) return -1;
+    if (teamA.goalsBalance < teamB.goalsBalance) return 1;
+    if (teamA.goalsFavor > teamB.goalsFavor) return -1;
+    if (teamA.goalsFavor < teamB.goalsFavor) return 1;
+    if (teamA.goalsOwn > teamB.goalsOwn) return -1;
+    if (teamA.goalsOwn < teamB.goalsOwn) return 1;
+    return 0;
+  });
+
+  return leaderboard;
 };

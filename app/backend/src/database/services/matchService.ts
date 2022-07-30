@@ -4,6 +4,9 @@ import TeamService from './teamService';
 import { IMatch, IMatchReq, IOngoingMatch } from '../interfaces/interfaces';
 import ErrorFactory from '../utils/errorFactory';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { Op } = require('sequelize');
+
 class MatchService {
   private model: typeof Match;
 
@@ -39,7 +42,6 @@ class MatchService {
     const newMatch = await this.model.create(matchDataProgress);
     if (!newMatch) throw new ErrorFactory(400, 'Bad match request');
 
-    // if (!inProgress) await new LeaderboardService().post(newMatch);
     return newMatch;
   };
 
@@ -63,6 +65,20 @@ class MatchService {
     await match.save();
 
     return { message: 'Finished' };
+  };
+
+  public getTeamCampaign = async (id: number) => {
+    const teamCampaign = await this.model.findAll({
+      where: {
+        inProgress: false,
+        [Op.or]: [
+          { homeTeam: id },
+          { awayTeam: id },
+        ],
+      },
+    });
+
+    return teamCampaign;
   };
 }
 
