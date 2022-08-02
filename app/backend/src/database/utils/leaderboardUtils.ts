@@ -127,7 +127,7 @@ const getLeaderboard = (allTeamsCampaign: ITeamCampaign[], option?: string): ILe
     name: team.teamName,
     totalPoints: calcPoints(team.teamHome, team.teamAway, option),
     totalGames: calcGames(team.teamHome, team.teamAway, option),
-    totalWins: calcWins(team.teamHome, team.teamAway, option),
+    totalVictories: calcWins(team.teamHome, team.teamAway, option),
     totalDraws: calcDraws(team, option),
     totalLosses: calcLosses(team.teamHome, team.teamAway, option),
     goalsFavor: calcGoalsFavor(team.teamHome, team.teamAway, option),

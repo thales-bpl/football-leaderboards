@@ -16,35 +16,33 @@ class LeaderboardController {
     return res.status(200).json(teamData);
   };
 
-  public getLeaderboard = async (_req: Request, res: Response) => {
+  public getLeaderboard = async (req: Request, res: Response) => {
     // const URL = newWindow.location.href;
     // not working: it throws an error.
+    const { home, away } = req.params;
 
-    // const { home, away } = req.params;
+    if (home) {
+      const leaderboard = await this.service.getLeaderboard(home);
+      return res.status(200).json(leaderboard);
+    }
 
-    // if (home) {
-    //   const leaderboard = await this.service.getLeaderboard(home);
-    //   return res.status(200).json(leaderboard);
-    // }
-
-    // if (away) {
-    //   const leaderboard = await this.service.getLeaderboard(away);
-    //   return res.status(200).json(leaderboard);
-    // }
+    if (away) {
+      const leaderboard = await this.service.getLeaderboard(away);
+      return res.status(200).json(leaderboard);
+    }
 
     const leaderboard = await this.service.getLeaderboard();
     return res.status(200).json(leaderboard);
   };
+  // public getLeaderboardAsHome = async (_req: Request, res: Response) => {
+  //   const leaderboard = await this.service.getLeaderboard('home');
+  //   return res.status(200).json(leaderboard);
+  // };
 
-  public getLeaderboardAsHome = async (_req: Request, res: Response) => {
-    const leaderboard = await this.service.getLeaderboard('home');
-    return res.status(200).json(leaderboard);
-  };
-
-  public getLeaderboardAsAway = async (_req: Request, res: Response) => {
-    const leaderboard = await this.service.getLeaderboard('away');
-    return res.status(200).json(leaderboard);
-  }
+  // public getLeaderboardAsAway = async (_req: Request, res: Response) => {
+  //   const leaderboard = await this.service.getLeaderboard('away');
+  //   return res.status(200).json(leaderboard);
+  // }
 }
 
 export default LeaderboardController;

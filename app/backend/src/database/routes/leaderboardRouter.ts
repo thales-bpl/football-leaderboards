@@ -9,8 +9,8 @@ const leaderboardController = new LeaderboardController();
 
 router
   .get('/', rescue(leaderboardController.getLeaderboard))
-  .get('/home', rescue(leaderboardController.getLeaderboardAsHome))
-  .get('/away', rescue(leaderboardController.getLeaderboardAsAway))
+  .get('/:home', rescue(leaderboardController.getLeaderboard))
+  .get('/:away', rescue(leaderboardController.getLeaderboard))
   .get('/:id', rescue(leaderboardController.getTeamCampaign));
 
 export default router;
