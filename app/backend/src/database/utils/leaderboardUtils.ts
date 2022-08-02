@@ -2,7 +2,7 @@ import { ITeamCampaign, IMatchGoals, ILeaderboard } from '../interfaces/interfac
 
 const calcGames = (teamHome: IMatchGoals[], teamAway: IMatchGoals[], option?: string): number => {
   if (option === 'home') return teamHome.length;
-  if (option === 'away') return teamHome.length;
+  if (option === 'away') return teamAway.length;
   return teamHome.length + teamAway.length;
 };
 
