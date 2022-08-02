@@ -1,6 +1,12 @@
-import { ITeamCampaign, IOngoingMatch, ILeaderboard } from '../interfaces/interfaces';
+import { ITeamCampaign, IMatchGoals, ILeaderboard } from '../interfaces/interfaces';
 
-export const calcPoints = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]): number => {
+const calcGames = (teamHome: IMatchGoals[], teamAway: IMatchGoals[], option?: string): number => {
+  if (option === 'home') return teamHome.length;
+  if (option === 'away') return teamHome.length;
+  return teamHome.length + teamAway.length;
+};
+
+const calcPoints = (teamHome: IMatchGoals[], teamAway: IMatchGoals[], option?: string): number => {
   const pointsAsHome = teamHome.reduce((prev, curr) => {
     if (curr.homeTeamGoals > curr.awayTeamGoals) return prev + 3;
     if (curr.homeTeamGoals === curr.awayTeamGoals) return prev + 1;
@@ -13,10 +19,12 @@ export const calcPoints = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[])
     return prev;
   }, 0);
 
+  if (option === 'home') return pointsAsHome;
+  if (option === 'away') return pointsAsAway;
   return pointsAsHome + pointsAsAway;
 };
 
-export const calcWins = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]): number => {
+const calcWins = (teamHome: IMatchGoals[], teamAway: IMatchGoals[], option?: string): number => {
   const winsAsHome = teamHome.reduce((prev, curr) => {
     if (curr.homeTeamGoals > curr.awayTeamGoals) return prev + 1;
     return prev;
@@ -27,24 +35,29 @@ export const calcWins = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]): 
     return prev;
   }, 0);
 
+  if (option === 'home') return winsAsHome;
+  if (option === 'away') return winsAsAway;
   return winsAsHome + winsAsAway;
 };
 
-export const calcDraws = (team: ITeamCampaign) => {
-  let draws = 0;
+const calcDraws = (team: ITeamCampaign, option?: string): number => {
+  let drawsAsHome = 0;
+  let drawsAsAway = 0;
 
   team.teamHome.forEach((match) => {
-    if (match.homeTeamGoals === match.awayTeamGoals) draws += 1;
+    if (match.homeTeamGoals === match.awayTeamGoals) drawsAsHome += 1;
   });
 
   team.teamAway.forEach((match) => {
-    if (match.homeTeamGoals === match.awayTeamGoals) draws += 1;
+    if (match.homeTeamGoals === match.awayTeamGoals) drawsAsAway += 1;
   });
 
-  return draws;
+  if (option === 'home') return drawsAsHome;
+  if (option === 'away') return drawsAsAway;
+  return drawsAsHome + drawsAsAway;
 };
 
-export const calcLosses = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+const calcLosses = (teamHome: IMatchGoals[], teamAway: IMatchGoals[], option?: string): number => {
   const lossesAsHome = teamHome.reduce((prev, curr) => {
     if (curr.homeTeamGoals < curr.awayTeamGoals) return prev + 1;
     return prev;
@@ -55,56 +68,78 @@ export const calcLosses = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[])
     return prev;
   }, 0);
 
+  if (option === 'home') return lossesAsHome;
+  if (option === 'away') return lossesAsAway;
   return lossesAsHome + lossesAsAway;
 };
 
-export const calcGoalsFavor = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
+const calcGoalsFavor = (
+  teamHome: IMatchGoals[],
+  teamAway: IMatchGoals[],
+  option?: string,
+): number => {
   const goalsAsHome = teamHome.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
   const goalsAsAway = teamAway.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
 
+  if (option === 'home') return goalsAsHome;
+  if (option === 'away') return goalsAsAway;
   return goalsAsHome + goalsAsAway;
 };
 
-export const calcGoalsOwn = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
-  const goalsOwnAsHome = teamHome.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
-  const goalsOwnAsAway = teamAway.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
+const calcGoalsOwn = (
+  teamHome: IMatchGoals[],
+  teamAway: IMatchGoals[],
+  option?: string,
+): number => {
+  const ownGoalsAsHome = teamHome.reduce((prev, curr) => prev + curr.awayTeamGoals, 0);
+  const ownGoalsAsAway = teamAway.reduce((prev, curr) => prev + curr.homeTeamGoals, 0);
 
-  return goalsOwnAsHome + goalsOwnAsAway;
+  if (option === 'home') return ownGoalsAsHome;
+  if (option === 'away') return ownGoalsAsAway;
+  return ownGoalsAsHome + ownGoalsAsAway;
 };
 
-export const calcGoalsBalance = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
-  const goalsFavor = calcGoalsFavor(teamHome, teamAway);
-  const goalsOwn = calcGoalsOwn(teamHome, teamAway);
+const calcGoalsBalance = (
+  teamHome: IMatchGoals[],
+  teamAway: IMatchGoals[],
+  option?: string,
+): number => {
+  const goalsFavor = calcGoalsFavor(teamHome, teamAway, option);
+  const goalsOwn = calcGoalsOwn(teamHome, teamAway, option);
 
   return goalsFavor - goalsOwn;
 };
 
-export const calcEfficiency = (teamHome: IOngoingMatch[], teamAway: IOngoingMatch[]) => {
-  const teamPoints = calcPoints(teamHome, teamAway);
-  const matches = teamHome.length + teamAway.length;
+const calcEfficiency = (
+  teamHome: IMatchGoals[],
+  teamAway: IMatchGoals[],
+  option?: string,
+): number => {
+  const teamPoints = calcPoints(teamHome, teamAway, option);
+  const matchesPlayed = calcGames(teamHome, teamAway, option);
 
-  const efficiency = (teamPoints / (matches * 3)) * 100;
+  const efficiency = (teamPoints / (matchesPlayed * 3)) * 100;
   return +efficiency.toFixed(2);
 };
 
-export const getLeaderboard = (allTeamsCampaign: ITeamCampaign[]): ILeaderboard[] => {
+const getLeaderboard = (allTeamsCampaign: ITeamCampaign[], option?: string): ILeaderboard[] => {
   const unorderedLeaderboard = allTeamsCampaign.map((team) => ({
     name: team.teamName,
-    totalPoints: calcPoints(team.teamHome, team.teamAway),
-    totalGames: team.teamHome.length + team.teamAway.length,
-    teamWins: calcWins(team.teamHome, team.teamAway),
-    teamDraws: calcDraws(team),
-    teamLosses: calcLosses(team.teamHome, team.teamAway),
-    goalsFavor: calcGoalsFavor(team.teamHome, team.teamAway),
-    goalsOwn: calcGoalsOwn(team.teamHome, team.teamAway),
-    goalsBalance: calcGoalsBalance(team.teamHome, team.teamAway),
-    efficiency: calcEfficiency(team.teamHome, team.teamAway),
+    totalPoints: calcPoints(team.teamHome, team.teamAway, option),
+    totalGames: calcGames(team.teamHome, team.teamAway, option),
+    teamWins: calcWins(team.teamHome, team.teamAway, option),
+    teamDraws: calcDraws(team, option),
+    teamLosses: calcLosses(team.teamHome, team.teamAway, option),
+    goalsFavor: calcGoalsFavor(team.teamHome, team.teamAway, option),
+    goalsOwn: calcGoalsOwn(team.teamHome, team.teamAway, option),
+    goalsBalance: calcGoalsBalance(team.teamHome, team.teamAway, option),
+    efficiency: calcEfficiency(team.teamHome, team.teamAway, option),
   }));
 
   return unorderedLeaderboard as unknown as ILeaderboard[];
 };
 
-export const sortLeaderboard = (leaderboard: ILeaderboard[]) => {
+const sortLeaderboard = (leaderboard: ILeaderboard[]) => {
   leaderboard.sort((teamA, teamB) => {
     if (teamA.totalPoints > teamB.totalPoints) return -1;
     if (teamA.totalPoints < teamB.totalPoints) return 1;
@@ -120,4 +155,9 @@ export const sortLeaderboard = (leaderboard: ILeaderboard[]) => {
   });
 
   return leaderboard;
+};
+
+export {
+  getLeaderboard,
+  sortLeaderboard,
 };

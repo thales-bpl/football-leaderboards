@@ -8,9 +8,9 @@ class LeaderboardService {
     return allMatches;
   };
 
-  public getLeaderboard = async () => {
+  public getLeaderboard = async (option?: string) => {
     const leagueData = await new TeamEager().getAllTeamsCampaign();
-    const unorderedLeaderboard = getLeaderboard(leagueData);
+    const unorderedLeaderboard = getLeaderboard(leagueData, option);
     const leaderboard = sortLeaderboard(unorderedLeaderboard);
 
     return leaderboard;

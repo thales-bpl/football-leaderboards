@@ -1,7 +1,7 @@
 import Match from '../models/match';
 import MatchEager from '../eager/matchEager';
 import TeamService from './teamService';
-import { IMatch, IMatchReq, IOngoingMatch } from '../interfaces/interfaces';
+import { IMatch, IMatchReq, IMatchGoals } from '../interfaces/interfaces';
 import ErrorFactory from '../utils/errorFactory';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -45,7 +45,7 @@ class MatchService {
     return newMatch;
   };
 
-  public patch = async (id: number, body: IOngoingMatch, option?: boolean): Promise<IMatch> => {
+  public patch = async (id: number, body: IMatchGoals, option?: boolean): Promise<IMatch> => {
     const { homeTeamGoals, awayTeamGoals } = body;
     const match = await this.getById(id);
     if (option) match.inProgress = option;

@@ -49,7 +49,7 @@ export interface IMatchResponse extends IMatch {
   },
 }
 
-export interface IOngoingMatch {
+export interface IMatchGoals {
   homeTeamGoals: number,
   awayTeamGoals: number
 }
@@ -79,8 +79,8 @@ export interface ITeamStat {
 
 export interface ITeamCampaign {
   teamName: string,
-  teamHome: IOngoingMatch[],
-  teamAway: IOngoingMatch[],
+  teamHome: IMatchGoals[],
+  teamAway: IMatchGoals[],
 }
 
 /// /// /// UTILS INTERFACES \\\ \\\ \\\
