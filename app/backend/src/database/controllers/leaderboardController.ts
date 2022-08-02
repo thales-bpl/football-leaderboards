@@ -17,9 +17,9 @@ class LeaderboardController {
   };
 
   public getLeaderboard = async (req: Request, res: Response) => {
-    const { home, away } = req.params;
-    // const URL = window.location.href;
+    // const URL = newWindow.location.href;
     // not working: it throws an error.
+    const { home, away } = req.params;
 
     if (home) {
       const leaderboard = await this.service.getLeaderboard(home);
