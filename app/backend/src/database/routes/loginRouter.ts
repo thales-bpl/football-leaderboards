@@ -12,6 +12,6 @@ const loginController = new LoginController();
 router
   .get('/', rescue(loginController.getAll))
   .get('/validate', tokenValidator, rescue(loginController.validateLogin))
-  .post('/', loginValidator, rescue(loginController.login));
+  .post('/', loginValidator, rescue(loginController.postLogin));
 
 export default router;

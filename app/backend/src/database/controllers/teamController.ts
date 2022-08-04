@@ -15,7 +15,8 @@ class TeamController {
 
   public getById = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const teamId = id as unknown as number;
+    const teamId = Number(id);
+
     const team = await this.service.getById(teamId);
     return res.status(200).json(team);
   };

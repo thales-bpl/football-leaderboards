@@ -16,12 +16,10 @@ class LoginService {
     return allUsers as IUserId[];
   };
 
-  public login = async (email: string, password: string): Promise<ILogin> => {
+  public postLogin = async (email: string, password: string): Promise<ILogin> => {
     const targetUser = await this.model.findOne({ where: { email } }) as IUserPass;
-    if (!targetUser) throw new ErrorFactory(401, 'Incorrect email or password');
-
     const validPass = bcrypt.compareSync(password, targetUser.password);
-    if (!validPass) throw new ErrorFactory(401, 'Incorrect email or password');
+    if (!validPass || !targetUser) throw new ErrorFactory(401, 'Incorrect email or password');
 
     const token = await generateToken(email, password);
     return { token };

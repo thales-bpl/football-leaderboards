@@ -13,9 +13,9 @@ class LoginController {
     return res.status(200).json(allUsers);
   };
 
-  public login = async (req: Request, res: Response) => {
+  public postLogin = async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    const loggedUser = await this.service.login(email, password);
+    const loggedUser = await this.service.postLogin(email, password);
     return res.status(200).json(loggedUser);
   };
 

@@ -1,14 +1,9 @@
 import TeamEager from '../eager/teamEager';
-import MatchService from './matchService';
 import { getLeaderboard, sortLeaderboard } from '../utils/leaderboardUtils';
+import { ILeaderboard } from '../interfaces/interfaces';
 
 class LeaderboardService {
-  public getTeamCampaign = async (id: number) => {
-    const allMatches = new MatchService().getTeamCampaign(id);
-    return allMatches;
-  };
-
-  public getLeaderboard = async (option?: string) => {
+  public getLeaderboard = async (option?: string): Promise<ILeaderboard[]> => {
     const leagueData = await new TeamEager().getAllTeamsCampaign();
     const unorderedLeaderboard = getLeaderboard(leagueData, option);
     const leaderboard = sortLeaderboard(unorderedLeaderboard);

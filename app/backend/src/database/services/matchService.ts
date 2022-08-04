@@ -4,9 +4,6 @@ import TeamService from './teamService';
 import { IMatch, IMatchReq, IMatchGoals } from '../interfaces/interfaces';
 import ErrorFactory from '../utils/errorFactory';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Op } = require('sequelize');
-
 class MatchService {
   private model: typeof Match;
 
@@ -15,13 +12,8 @@ class MatchService {
   }
 
   public getAll = async (option?: boolean) => {
-    if (option) {
-      const allMatches = await this.model.findAll();
-      return allMatches;
-    }
-
-    const allMatches = new MatchEager().getAllMatchesPayload();
-    return allMatches;
+    const matches = option ? await this.model.findAll() : new MatchEager().getAllMatchesPayload();
+    return matches;
   };
 
   public getById = async (id: number): Promise<Match> => {
@@ -45,10 +37,9 @@ class MatchService {
     return newMatch;
   };
 
-  public patch = async (id: number, body: IMatchGoals, option?: boolean): Promise<IMatch> => {
+  public patch = async (id: number, body: IMatchGoals): Promise<IMatch> => {
     const { homeTeamGoals, awayTeamGoals } = body;
     const match = await this.getById(id);
-    if (option) match.inProgress = option;
 
     match.set({
       homeTeamGoals,
@@ -65,20 +56,6 @@ class MatchService {
     await match.save();
 
     return { message: 'Finished' };
-  };
-
-  public getTeamCampaign = async (id: number) => {
-    const teamCampaign = await this.model.findAll({
-      where: {
-        inProgress: false,
-        [Op.or]: [
-          { homeTeam: id },
-          { awayTeam: id },
-        ],
-      },
-    });
-
-    return teamCampaign;
   };
 }
 

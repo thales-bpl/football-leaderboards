@@ -17,7 +17,6 @@ class TeamService {
   public getById = async (id: number): Promise<ITeam> => {
     const team = await this.model.findOne({ where: { id } });
     if (!team) throw new ErrorFactory(404, 'There is no team with such id!');
-    console.log(id, team);
     return team as ITeam;
   };
 }
