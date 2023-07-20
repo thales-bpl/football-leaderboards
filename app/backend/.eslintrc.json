@@ -15,8 +15,9 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2019,
+    // "tsconfigRootDir": "./",
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.json"]
   },
   "plugins": [
     "@typescript-eslint",
