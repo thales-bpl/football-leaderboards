@@ -9,5 +9,7 @@ O que foi desenvolvido por mim: camadas controller, model, service, rotas, trata
 
 Para rodar rodar o app local:
 1. Inicializar Docker:
-No terminal da aplicação:
-```npm run compose:up```
+
+    No terminal da aplicação:
+
+    ```npm run compose:up```
